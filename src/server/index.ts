@@ -6,10 +6,10 @@ import chalk from 'chalk';
 // import manifestHelpers from 'express-manifest-helpers';
 import manifestHelpers from './middleware/manifest-helpers';
 import bodyParser from 'body-parser';
-import { configureStore } from '../shared/store';
 import serverRender from './render';
 import paths from '../../config/paths';
 
+// ts:ignore-next-line
 require('dotenv').config();
 
 const app = express();
@@ -27,11 +27,6 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    req.store = configureStore();
-    return next();
-});
-
 const manifestPath = path.join(paths.clientBuild, paths.publicPath);
 
 app.use(
@@ -43,7 +38,7 @@ app.use(
 app.use(serverRender());
 
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err: any, req: any, res: any, next: any) => {
     return res.status(404).json({
         status: 'error',
         message: err.message,
@@ -52,9 +47,9 @@ app.use((err, req, res, next) => {
             process.env.NODE_ENV === 'development' &&
             (err.stack || '')
                 .split('\n')
-                .map((line) => line.trim())
-                .map((line) => line.split(path.sep).join('/'))
-                .map((line) =>
+                .map((line: any) => line.trim())
+                .map((line: any) => line.split(path.sep).join('/'))
+                .map((line: any) =>
                     line.replace(
                         process
                             .cwd()

@@ -1,35 +1,28 @@
-// @flow
 /* eslint-disable react/no-danger */
 import React from 'react';
-import Helmet from 'react-helmet';
 
-type PropsT = {
+interface IProps {
     children: any,
     css: string[],
     scripts: string[],
     state: string,
-};
+}
 
-export default class HTML extends React.Component<PropsT> {
-    static defaultProps = {
+export default class HTML extends React.Component<IProps> {
+    public static defaultProps = {
         css: [],
         scripts: [],
         state: '{}',
     };
 
-    render() {
-        const head = Helmet.renderStatic();
+    public render() {
         const { children, scripts, css, state } = this.props;
         return (
             <html lang="">
                 <head>
                     <meta charSet="utf-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    {head.base.toComponent()}
-                    {head.title.toComponent()}
-                    {head.meta.toComponent()}
-                    {head.link.toComponent()}
-                    {head.script.toComponent()}
+                    <title>Test</title>
                     {css.map((href) => {
                         return <link key={href} rel="stylesheet" href={href} />;
                     })}

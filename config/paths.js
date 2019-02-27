@@ -1,3 +1,4 @@
+// @ts-ignore
 const path = require('path');
 const fs = require('fs');
 
@@ -14,6 +15,7 @@ const paths = {
     srcServer: resolveApp('src/server'),
     srcShared: resolveApp('src/shared'),
     publicPath: '/static/',
+    tsConfig: resolveApp('tsconfig.json'),
 };
 
 paths.resolveModules = [

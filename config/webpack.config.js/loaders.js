@@ -1,12 +1,70 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const generateSourceMap = process.env.OMIT_SOURCEMAP === 'true' ? false : true;
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
+const path = require('path');
 
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 
+const esLintLoader = {
+    // First, run the linter.
+    // It's important to do this before Babel processes the JS.
+    test: /\.(js|mjs|jsx)$/,
+    enforce: 'pre',
+    use: [
+        {
+            options: {
+                formatter: require.resolve('react-dev-utils/eslintFormatter'),
+                eslintPath: require.resolve('eslint'),
+            },
+            loader: require.resolve('eslint-loader'),
+        },
+    ],
+    include: path.join(__dirname, 'src'),
+};
+
+const tsLintLoader = {
+    test: /\.(ts|tsx)$/,
+    enforce: 'pre',
+    use: [
+        {
+            loader: 'tslint-loader',
+            options: {
+                /* Loader options go here */
+            },
+        },
+    ],
+};
+
 const babelLoader = {
-    test: /\.(js|jsx|mjs)$/,
+    // test: /\.(js|mjs|jsx|ts|tsx)$/,
+    // include: /src/,
+    // loader: require.resolve('babel-loader'),
+    // options: {
+    //     customize: require.resolve(
+    //         'babel-preset-react-app/webpack-overrides'
+    //     ),
+    //     plugins: [
+    //         [
+    //             require.resolve('babel-plugin-named-asset-import'),
+    //             {
+    //                 loaderMap: {
+    //                     svg: {
+    //                         ReactComponent: '@svgr/webpack?-prettier,-svgo![path]',
+    //                     },
+    //                 },
+    //             },
+    //         ],
+    //     ],
+    //     // This is a feature of `babel-loader` for webpack (not Babel itself).
+    //     // It enables caching results in ./node_modules/.cache/babel-loader/
+    //     // directory for faster rebuilds.
+    //     cacheDirectory: true,
+    //     cacheCompression: false,
+    //     compact: false,
+    // },
+
+    test: /\.(js|mjs|jsx|ts|tsx)$/,
     exclude: /node_modules/,
     loader: require.resolve('babel-loader'),
     options: {
@@ -141,6 +199,8 @@ const fileLoaderServer = {
 };
 
 const client = [
+    esLintLoader,
+    tsLintLoader,
     {
         oneOf: [
             babelLoader,
@@ -152,6 +212,8 @@ const client = [
     },
 ];
 const server = [
+    esLintLoader,
+    tsLintLoader,
     {
         oneOf: [
             babelLoader,
